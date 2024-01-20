@@ -6,8 +6,8 @@ services:
     container_name: db-container
     restart: always
     environment:
-      MYSQL_DATABASE: db-clientes-igma
-      MYSQL_ROOT_PASSWORD: igma-root-password
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
     ports:
       - "${DATABASE_PORT}:3306"
     volumes:
