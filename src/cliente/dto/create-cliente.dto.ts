@@ -1,12 +1,13 @@
-import { IsDateString, IsNotEmpty } from 'class-validator';
+import { Type, } from 'class-transformer';
+import { IsDate, IsNotEmpty } from 'class-validator';
 import { IsCpf } from 'src/decorators/cpf-validator.decorator';
 
-export class Cliente {
-  id: number;
+export class ClienteDto {
   @IsCpf({ message: 'Cpf inválido' })
   cpf: string;
   @IsNotEmpty()
   nome: string;
-  @IsDateString()
+  @Type(() => Date)
+  @IsDate()
   dataDeNascimento: Date;
 }

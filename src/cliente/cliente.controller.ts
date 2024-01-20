@@ -1,11 +1,15 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { Cliente } from 'src/models/cliente.model';
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { ClienteDto } from './dto/create-cliente.dto';
+import { ClienteService } from './cliente.service';
 
 @Controller('clientes')
 export class ClienteController {
+  constructor(private clienteService: ClienteService) { }
   @Post()
-  clientes(@Body() cli: Cliente): string {
-    console.log(cli);
-    return 'ok';
+  createCliente(@Body() cli: ClienteDto) {
+    return this.clienteService.createCliente(cli);
   }
+
+  @Get()
+  buscarClientes() { }
 }

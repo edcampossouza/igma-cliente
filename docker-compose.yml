@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.3.0
+    container_name: db-container
+    restart: always
+    environment:
+      MYSQL_DATABASE: db-clientes-igma
+      MYSQL_ROOT_PASSWORD: igma-root-password
+    ports:
+      - "${DATABASE_PORT}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
