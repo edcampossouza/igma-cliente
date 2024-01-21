@@ -1,5 +1,5 @@
 import { ValidationOptions, registerDecorator } from 'class-validator';
-import { validaCpf } from 'src/util/cpf.validator';
+import { validaCpf } from '../util/cpf.validator';
 
 /**
  * Decorator de validação de cpf para o class-validator 

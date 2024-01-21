@@ -1,7 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ClienteDto } from './dto/create-cliente.dto';
 import { ClienteService } from './cliente.service';
-import { CpfPipe } from 'src/pipes/cpf-transform.pipe';
 
 @Controller('clientes')
 export class ClienteController {

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { ClienteDto } from './dto/create-cliente.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { validaCpf } from 'src/util/cpf.validator';
+import { PrismaService } from '../prisma/prisma.service';
+import { validaCpf } from '../util/cpf.validator';
 import { ClienteModel } from "@prisma/client"
 
 @Injectable()
