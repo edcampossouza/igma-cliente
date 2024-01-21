@@ -12,7 +12,7 @@ export class ClienteController {
   }
 
   @Get(':cpf')
-  buscarClientePorCpf(@Param('cpf', CpfPipe) cpf: string) {
+  buscarClientePorCpf(@Param('cpf') cpf: string) {
     return this.clienteService.buscarClientePorCpf(cpf)
   }
 
