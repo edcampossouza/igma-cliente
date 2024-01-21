@@ -3,6 +3,9 @@ import { ClienteDto } from './dto/create-cliente.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { validaCpf } from '../util/cpf.validator';
 import { ClienteModel } from "@prisma/client"
+import { QueryClienteDto } from './dto/query-cliente.dto';
+
+const REGISTROS_POR_PAGINA = 5;
 
 @Injectable()
 export class ClienteService {
@@ -14,7 +17,7 @@ export class ClienteService {
     return cliente
   }
 
-  async buscarClientePorCpf(cpf: string): Promise<ClienteModel> {
+  async clientePorCpf(cpf: string): Promise<ClienteModel> {
     if (!validaCpf(cpf)) throw new NotFoundException()
     cpf = this.removeMascara(cpf)
     const cliente = await this.db.clienteModel.findFirst({ where: { cpf } })
@@ -22,8 +25,15 @@ export class ClienteService {
     return cliente
   }
 
-  async clientes(): Promise<ClienteModel[]> {
-    return []
+  async clientes(query: QueryClienteDto): Promise<ClienteModel[]> {
+
+    if (query.page) {
+      return this.db.clienteModel.findMany({
+        skip: (query.page - 1) * REGISTROS_POR_PAGINA,
+        take: REGISTROS_POR_PAGINA
+      })
+    }
+    return this.db.clienteModel.findMany({});
   }
 
   removeMascara(cpf: string): string {

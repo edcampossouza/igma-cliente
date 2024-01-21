@@ -32,19 +32,19 @@ describe('ClienteService', () => {
 
   it('busca por cpf corretamente', () => {
     const cliente = mockClientes[0];
-    expect(service.buscarClientePorCpf(cliente.cpf)).resolves.toBe(cliente)
+    expect(service.clientePorCpf(cliente.cpf)).resolves.toBe(cliente)
   })
 
   it('busca por cpf corretamente (com mascara)', () => {
     const cliente = mockClientes[0];
-    expect(service.buscarClientePorCpf(mascaraCpf(cliente.cpf))).resolves.toBe(cliente)
+    expect(service.clientePorCpf(mascaraCpf(cliente.cpf))).resolves.toBe(cliente)
   })
 
   it('NotFoundException (cpf com mascara incorreta)', () => {
     const cliente = mockClientes[0];
     const cpf = cliente.cpf;
     const chave = `${cpf.substring(0, 3)}.${cpf.substring(3, 6)}.${cpf.substring(6, 11)}`
-    expect(service.buscarClientePorCpf(chave)).rejects.toBeInstanceOf(NotFoundException)
+    expect(service.clientePorCpf(chave)).rejects.toBeInstanceOf(NotFoundException)
   })
 
 });

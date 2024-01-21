@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, DefaultValuePipe, Get, Param, ParseIntPipe, Post, Query, ValidationPipe } from '@nestjs/common';
 import { ClienteDto } from './dto/create-cliente.dto';
 import { ClienteService } from './cliente.service';
+import { QueryClienteDto } from './dto/query-cliente.dto';
 
 @Controller('clientes')
 export class ClienteController {
@@ -12,9 +13,11 @@ export class ClienteController {
 
   @Get(':cpf')
   buscarClientePorCpf(@Param('cpf') cpf: string) {
-    return this.clienteService.buscarClientePorCpf(cpf)
+    return this.clienteService.clientePorCpf(cpf)
   }
 
   @Get()
-  buscarClientes() { }
+  buscarClientes(@Query() query: QueryClienteDto) {
+    return this.clienteService.clientes(query)
+  }
 }
