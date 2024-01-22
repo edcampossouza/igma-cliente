@@ -71,6 +71,10 @@
 
 ## Tecnologias utilizadas
 
+- Node.js v20.10.0
+
+  Ambiente de execução javascript
+
 - Nest.js (baseado em Typescript)
 
   Framework web de aplicações server-side
@@ -87,5 +91,3 @@
 
   Para iniciar o container MySql automaticamente a partir do arquivo `.env`
 
-- Node.js v20.10.0
-  Ambiente de execução javascript

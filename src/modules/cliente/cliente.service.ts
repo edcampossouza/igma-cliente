@@ -12,17 +12,17 @@ import { QueryClienteDto } from './dto/query-cliente.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { ClienteResponseDto } from './dto/cliente-response.dto';
 
-const REGISTROS_POR_PAGINA = 5;
+const REGISTROS_POR_PAGINA = 10;
 
 @Injectable()
 export class ClienteService {
-  constructor(private db: PrismaService) {}
+  constructor(private repo: PrismaService) {}
   async criarCliente(clienteDto: ClienteDto): Promise<ClienteModel> {
     if (!validaCpf(clienteDto.cpf))
       throw new UnprocessableEntityException('Cpf inválido');
     clienteDto.cpf = this.removeMascara(clienteDto.cpf);
     try {
-      const cliente = await this.db.clienteModel.create({ data: clienteDto });
+      const cliente = await this.repo.clienteModel.create({ data: clienteDto });
       return cliente;
     } catch (error) {
       if (
@@ -37,7 +37,7 @@ export class ClienteService {
   async clientePorCpf(cpf: string): Promise<ClienteModel> {
     if (!validaCpf(cpf)) throw new NotFoundException();
     cpf = this.removeMascara(cpf);
-    const cliente = await this.db.clienteModel.findUnique({ where: { cpf } });
+    const cliente = await this.repo.clienteModel.findUnique({ where: { cpf } });
     if (!cliente) throw new NotFoundException();
     return cliente;
   }
@@ -48,11 +48,11 @@ export class ClienteService {
     if (query.page) {
       const limit = query.limit ? query.limit : REGISTROS_POR_PAGINA;
       const [data, total] = await Promise.all([
-        this.db.clienteModel.findMany({
+        this.repo.clienteModel.findMany({
           skip: (query.page - 1) * limit,
           take: limit,
         }),
-        this.db.clienteModel.count({}),
+        this.repo.clienteModel.count({}),
       ]);
       const response = {
         data,
@@ -63,7 +63,7 @@ export class ClienteService {
       };
       return response;
     } else {
-      const data = await this.db.clienteModel.findMany({});
+      const data = await this.repo.clienteModel.findMany({});
       return {
         data,
         currentPage: 1,

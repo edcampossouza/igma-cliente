@@ -6,7 +6,6 @@ import { ConflictException, NotFoundException } from '@nestjs/common';
 import { ClienteDto } from './dto/create-cliente.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { ClienteModel } from '@prisma/client';
-import { QueryClienteDto } from './dto/query-cliente.dto';
 
 describe('ClienteService', () => {
   let service: ClienteService;
@@ -15,9 +14,9 @@ describe('ClienteService', () => {
   const mockPrisma = {
     clienteModel: {
       findUnique: async ({ where: { cpf } }) => db.find((c) => c.cpf === cpf),
-      findMany: async (query: QueryClienteDto) => {
-        if (query.page) {
-          return db;
+      findMany: async ({ skip, take }: { skip: number; take: number }) => {
+        if (skip) {
+          return db.slice(skip, skip + take);
         } else {
           return db;
         }
