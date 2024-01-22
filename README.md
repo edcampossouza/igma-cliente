@@ -6,7 +6,7 @@
 
    Execute `npm install` para instalar os pacotes necessários
 
-2. edite o arquivo `.env` com as informações:
+2. Edite o arquivo `.env` com as informações:
 
    `DATABASE_NAME`: nome do banco de dados MySql
 
@@ -31,12 +31,28 @@
 ## Execução
 
 - execute `npm run start:dev` para subir a aplicação
+- altere a porta com a variável de ambiente `APP_PORT` (padrao: 3500)
+
+## Testes
+  - execute `npm run testes` para rodar os testes unitários
+
+### Testes de integração
+   - Edite o arquivo `.env.test` com os dados de acesso ao banco de testes
+   - Caso o sistema possoa o Docker instalado, `npm run db-test-up`, para criar o container MySql de testes
+   - Caso contrário, crie uma instância de banco de dados MySql de acordo com os dados do arquivo `.env.test` 
+   - ```npm run test:e2e``` para rodar os testes de integração
 
 ## Rotas
 
 - `POST /clientes`
 
+  Cria um cliente
+
   Exemplo de requisição:
+
+  `POST /clientes`
+
+  body:
 
   ```json
   {
@@ -67,7 +83,73 @@
   }
   ```
 
-  Aceita ```cpf``` com (174.972.590-83) ou sem (17497259083) máscara
+  Aceita `cpf` com (174.972.590-83) ou sem (17497259083) máscara
+
+- `GET /clientes/:cpf`
+
+  Obtém o cliente com o cpf especificado
+
+  exemplo de requisição
+
+  `GET /clientes/11144477735`
+
+  exemplo de resposta
+
+  ```json
+  {
+    "id": 15,
+    "nome": "cli 1.2",
+    "cpf": "11144477735",
+    "dataDeNascimento": "2000-12-20T00:00:00.000Z"
+  }
+  ```
+
+  exemplo de resposta (não encontrado)
+
+  ```json
+  {
+    "message": "Not Found",
+    "statusCode": 404
+  }
+  ```
+
+- GET `/clientes`
+
+  Obtém uma lista de clientes
+
+  Query strings:
+
+  - `page`: página a ser retornada (>=1)
+  - `limite`: registros por página (padrão: 10)
+
+  Exemplo de requisição
+
+  `GET /clientes?limit=2&page=1`
+
+  Exemplo de resposta
+
+  ```json
+  {
+    "data": [
+      {
+        "id": 15,
+        "nome": "cli 1.2",
+        "cpf": "11144477735",
+        "dataDeNascimento": "2000-12-20T00:00:00.000Z"
+      },
+      {
+        "id": 17,
+        "nome": "Eduardo",
+        "cpf": "17497259083",
+        "dataDeNascimento": "2000-01-21T00:00:00.000Z"
+      }
+    ],
+    "currentPage": 1,
+    "itemsPerPage": 2,
+    "totalPages": 2,
+    "totalItems": 3
+  }
+  ```
 
 ## Tecnologias utilizadas
 
@@ -90,4 +172,3 @@
 - Docker (opcional)
 
   Para iniciar o container MySql automaticamente a partir do arquivo `.env`
-

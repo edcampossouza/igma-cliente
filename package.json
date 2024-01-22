@@ -17,15 +17,15 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:e2e": "dotenv -e .env.test jest -- --config ./test/jest-e2e.json",
+    "posttest:e2e": "npm run db-test-down",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "pretest:e2e": "npm run migrate:test",
     "migrate:dev": "prisma migrate dev",
     "migrate:test": "dotenv -e .env.test prisma -- migrate dev",
     "db-dev-up": "docker compose -f docker-compose.yml up",
-    "db-dev-down": "docker compose -f docker-compose.yml -v down",
+    "db-dev-down": "docker compose -f docker-compose.yml down",
     "db-test-up": "dotenv -e .env.test docker -- compose -f docker-compose-test.yml up",
-    "db-test-down": "dotenv -e .env.test docker -- compose -f docker-compose-test.yml -v down",
-    "posttest:e2e": "npm run db-test-down"
+    "db-test-down": "dotenv -e .env.test docker -- compose -f docker-compose-test.yml down"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
