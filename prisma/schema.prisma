@@ -13,6 +13,6 @@ datasource db {
 model ClienteModel {
   id                Int      @id @default(autoincrement())
   nome              String
-  cpf               String   @db.VarChar(11)
+  cpf               String   @db.VarChar(11) @unique
   dataDeNascimento  DateTime @db.Date
 }

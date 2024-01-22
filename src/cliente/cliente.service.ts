@@ -20,7 +20,7 @@ export class ClienteService {
   async clientePorCpf(cpf: string): Promise<ClienteModel> {
     if (!validaCpf(cpf)) throw new NotFoundException()
     cpf = this.removeMascara(cpf)
-    const cliente = await this.db.clienteModel.findFirst({ where: { cpf } })
+    const cliente = await this.db.clienteModel.findUnique({ where: { cpf } })
     if (!cliente) throw new NotFoundException()
     return cliente
   }
