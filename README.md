@@ -38,7 +38,7 @@
 
 ### Testes de integração
    - Edite o arquivo `.env.test` com os dados de acesso ao banco de testes
-   - Caso o sistema possoa o Docker instalado, `npm run db-test-up`, para criar o container MySql de testes
+   - Caso o sistema possua o Docker instalado, `npm run db-test-up`, para criar o container MySql de testes
    - Caso contrário, crie uma instância de banco de dados MySql de acordo com os dados do arquivo `.env.test` 
    - ```npm run test:e2e``` para rodar os testes de integração
 
