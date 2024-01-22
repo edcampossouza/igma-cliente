@@ -1,4 +1,5 @@
 import { ClienteModel } from '@prisma/client';
+import { ClienteDto } from '../dto/create-cliente.dto';
 
 export const mockClientes: ClienteModel[] = [
   {
@@ -26,3 +27,9 @@ export const mockClientes: ClienteModel[] = [
     nome: 'cli 4',
   },
 ];
+
+export const mockCliente: ClienteDto = {
+  cpf: '88267492054',
+  dataDeNascimento: new Date('2015-05-03'),
+  nome: 'cli 5',
+};

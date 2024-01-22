@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   NotFoundException,
   UnprocessableEntityException,
@@ -8,6 +9,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { validaCpf } from '../../util/cpf.validator';
 import { ClienteModel } from '@prisma/client';
 import { QueryClienteDto } from './dto/query-cliente.dto';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 const REGISTROS_POR_PAGINA = 5;
 
@@ -18,8 +20,17 @@ export class ClienteService {
     if (!validaCpf(clienteDto.cpf))
       throw new UnprocessableEntityException('Cpf inválido');
     clienteDto.cpf = this.removeMascara(clienteDto.cpf);
-    const cliente = await this.db.clienteModel.create({ data: clienteDto });
-    return cliente;
+    try {
+      const cliente = await this.db.clienteModel.create({ data: clienteDto });
+      return cliente;
+    } catch (error) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new ConflictException('Cpf já cadastrado');
+      }
+    }
   }
 
   async clientePorCpf(cpf: string): Promise<ClienteModel> {
