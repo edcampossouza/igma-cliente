@@ -30,7 +30,7 @@ export class ClienteService {
         error.code === 'P2002'
       ) {
         throw new ConflictException('Cpf já cadastrado');
-      }
+      } else throw error;
     }
   }
 

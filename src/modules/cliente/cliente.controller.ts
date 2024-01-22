@@ -6,6 +6,7 @@ import { QueryClienteDto } from './dto/query-cliente.dto';
 @Controller('clientes')
 export class ClienteController {
   constructor(private clienteService: ClienteService) {}
+
   @Post()
   createCliente(@Body() clienteDto: ClienteDto) {
     return this.clienteService.criarCliente(clienteDto);
