@@ -18,6 +18,6 @@ export class ClienteController {
 
   @Get()
   buscarClientes(@Query() query: QueryClienteDto) {
-    return this.clienteService.clientes(query);
+    return this.clienteService.clientesComPaginacao(query);
   }
 }

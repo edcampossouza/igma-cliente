@@ -7,4 +7,10 @@ export class QueryClienteDto {
   @IsOptional()
   @Type(() => Number)
   page?: number;
+
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  @Type(() => Number)
+  limit?: number;
 }

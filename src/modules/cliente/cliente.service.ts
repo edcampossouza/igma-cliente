@@ -10,6 +10,7 @@ import { validaCpf } from '../../util/cpf.validator';
 import { ClienteModel } from '@prisma/client';
 import { QueryClienteDto } from './dto/query-cliente.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { ClienteResponseDto } from './dto/cliente-response.dto';
 
 const REGISTROS_POR_PAGINA = 5;
 
@@ -41,14 +42,37 @@ export class ClienteService {
     return cliente;
   }
 
-  async clientes(query: QueryClienteDto): Promise<ClienteModel[]> {
+  async clientesComPaginacao(
+    query: QueryClienteDto,
+  ): Promise<ClienteResponseDto> {
     if (query.page) {
-      return this.db.clienteModel.findMany({
-        skip: (query.page - 1) * REGISTROS_POR_PAGINA,
-        take: REGISTROS_POR_PAGINA,
-      });
+      const limit = query.limit ? query.limit : REGISTROS_POR_PAGINA;
+      console.log(limit);
+      const [data, total] = await Promise.all([
+        this.db.clienteModel.findMany({
+          skip: (query.page - 1) * limit,
+          take: limit,
+        }),
+        this.db.clienteModel.count({}),
+      ]);
+      const response = {
+        data,
+        currentPage: query.page,
+        itemsPerPage: limit,
+        totalPages: Math.ceil(total / limit),
+        totalItems: total,
+      };
+      return response;
+    } else {
+      const data = await this.db.clienteModel.findMany({});
+      return {
+        data,
+        currentPage: 1,
+        itemsPerPage: data.length,
+        totalPages: 1,
+        totalItems: data.length,
+      };
     }
-    return this.db.clienteModel.findMany({});
   }
 
   removeMascara(cpf: string): string {
