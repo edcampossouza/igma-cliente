@@ -6,11 +6,13 @@ import { NotFoundException } from '@nestjs/common';
 
 describe('ClienteService', () => {
   let service: ClienteService;
-  let prisma: PrismaService;
 
   const mockPrisma = {
-    clienteModel: { findFirst: async ({ where: { cpf } }) => mockClientes.find(c => c.cpf === cpf) },
-  }
+    clienteModel: {
+      findUnique: async ({ where: { cpf } }) =>
+        mockClientes.find((c) => c.cpf === cpf),
+    },
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -21,9 +23,6 @@ describe('ClienteService', () => {
       .compile();
 
     service = module.get<ClienteService>(ClienteService);
-    prisma = module.get<PrismaService>(PrismaService);
-
-
   });
 
   it('should be defined', () => {
@@ -32,23 +31,26 @@ describe('ClienteService', () => {
 
   it('busca por cpf corretamente', () => {
     const cliente = mockClientes[0];
-    expect(service.clientePorCpf(cliente.cpf)).resolves.toBe(cliente)
-  })
+    expect(service.clientePorCpf(cliente.cpf)).resolves.toBe(cliente);
+  });
 
   it('busca por cpf corretamente (com mascara)', () => {
     const cliente = mockClientes[0];
-    expect(service.clientePorCpf(mascaraCpf(cliente.cpf))).resolves.toBe(cliente)
-  })
+    expect(service.clientePorCpf(mascaraCpf(cliente.cpf))).resolves.toBe(
+      cliente,
+    );
+  });
 
   it('NotFoundException (cpf com mascara incorreta)', () => {
     const cliente = mockClientes[0];
     const cpf = cliente.cpf;
-    const chave = `${cpf.substring(0, 3)}.${cpf.substring(3, 6)}.${cpf.substring(6, 11)}`
-    expect(service.clientePorCpf(chave)).rejects.toBeInstanceOf(NotFoundException)
-  })
-
+    const chave = `${cpf.substring(0, 3)}.${cpf.substring(3, 6)}.${cpf.substring(6, 11)}`;
+    expect(service.clientePorCpf(chave)).rejects.toBeInstanceOf(
+      NotFoundException,
+    );
+  });
 });
 
 function mascaraCpf(cpf: string): string {
-  return `${cpf.substring(0, 3)}.${cpf.substring(3, 6)}.${cpf.substring(6, 9)}-${cpf.substring(9, 11)}`
+  return `${cpf.substring(0, 3)}.${cpf.substring(3, 6)}.${cpf.substring(6, 9)}-${cpf.substring(9, 11)}`;
 }
