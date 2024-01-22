@@ -5,26 +5,37 @@ import { mockClientes, mockCliente } from './mock-data/clientes.mock';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { ClienteDto } from './dto/create-cliente.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { ClienteModel } from '@prisma/client';
+import { QueryClienteDto } from './dto/query-cliente.dto';
 
 describe('ClienteService', () => {
   let service: ClienteService;
+  let db: ClienteModel[] = [...mockClientes];
 
   const mockPrisma = {
     clienteModel: {
-      findUnique: async ({ where: { cpf } }) =>
-        mockClientes.find((c) => c.cpf === cpf),
+      findUnique: async ({ where: { cpf } }) => db.find((c) => c.cpf === cpf),
+      findMany: async (query: QueryClienteDto) => {
+        if (query.page) {
+          return db;
+        } else {
+          return db;
+        }
+      },
+      count: () => {
+        return db.length;
+      },
       create: async (argument: { data: ClienteDto }) => {
         const { data } = argument;
-        const conflict = mockClientes.find((c) => c.cpf === data.cpf);
-        console.log('>>', data, conflict);
+        const conflict = db.find((c) => c.cpf === data.cpf);
         if (conflict) {
           throw new PrismaClientKnownRequestError('conflito', {
             code: 'P2002',
             clientVersion: '',
           });
         } else {
-          const maxId = mockClientes.reduce((p, c) => Math.max(p, c.id), 1);
-          mockClientes.push({ ...data, id: maxId + 1 });
+          const maxId = db.reduce((p, c) => Math.max(p, c.id), 1);
+          db.push({ ...data, id: maxId + 1 });
         }
       },
     },
@@ -39,6 +50,7 @@ describe('ClienteService', () => {
       .compile();
 
     service = module.get<ClienteService>(ClienteService);
+    db = [...mockClientes];
   });
 
   it('should be defined', () => {
@@ -72,7 +84,7 @@ describe('ClienteService', () => {
     const cliCriado = service.clientePorCpf(cli.cpf);
     expect(cliCriado).resolves.toMatchObject({
       cpf: cli.cpf,
-      id: mockClientes.length,
+      id: mockClientes.length + 1,
     });
   });
 
@@ -80,6 +92,30 @@ describe('ClienteService', () => {
     const cli = { ...mockClientes[0] };
     delete cli.id;
     expect(service.criarCliente(cli)).rejects.toBeInstanceOf(ConflictException);
+  });
+
+  it('Retorno sem paginacao', () => {
+    const response = service.clientesComPaginacao({});
+    expect(response).resolves.toMatchObject({
+      data: db,
+      currentPage: 1,
+      itemsPerPage: db.length,
+      totalPages: 1,
+      totalItems: db.length,
+    });
+  });
+  it('Retorno com paginacao', () => {
+    expect(db.length >= 2);
+    const page = 2;
+    const limit = 2;
+    const expectedData = [db[2], db[3]];
+    const response = service.clientesComPaginacao({ page, limit });
+    expect(response).resolves.toMatchObject({
+      data: expect.arrayContaining(expectedData),
+      currentPage: 2,
+      itemsPerPage: 2,
+      totalItems: db.length,
+    });
   });
 });
 

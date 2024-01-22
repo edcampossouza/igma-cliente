@@ -47,7 +47,6 @@ export class ClienteService {
   ): Promise<ClienteResponseDto> {
     if (query.page) {
       const limit = query.limit ? query.limit : REGISTROS_POR_PAGINA;
-      console.log(limit);
       const [data, total] = await Promise.all([
         this.db.clienteModel.findMany({
           skip: (query.page - 1) * limit,
