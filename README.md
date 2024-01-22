@@ -26,7 +26,7 @@
 
 4. Inicialização do banco de dados
 
-   Execute `npm run migrate:deploy` para inicializar o esquema do banco de dados
+   Execute `npm run migrate:dev` para inicializar o esquema do banco de dados
 
 ## Execução
 
@@ -34,7 +34,7 @@
 - altere a porta com a variável de ambiente `APP_PORT` (padrao: 3500)
 
 ## Testes
-  - execute `npm run testes` para rodar os testes unitários
+  - execute `npm run test` para rodar os testes unitários
 
 ### Testes de integração
    - Edite o arquivo `.env.test` com os dados de acesso ao banco de testes
