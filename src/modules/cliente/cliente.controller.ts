@@ -8,13 +8,13 @@ export class ClienteController {
   constructor(private clienteService: ClienteService) {}
 
   @Post()
-  createCliente(@Body() clienteDto: ClienteDto) {
+  criarCliente(@Body() clienteDto: ClienteDto) {
     return this.clienteService.criarCliente(clienteDto);
   }
 
   @Get(':cpf')
   buscarClientePorCpf(@Param('cpf') cpf: string) {
-    return this.clienteService.clientePorCpf(cpf);
+    return this.clienteService.buscarClientePorCpf(cpf);
   }
 
   @Get()

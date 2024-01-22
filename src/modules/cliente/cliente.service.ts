@@ -34,7 +34,7 @@ export class ClienteService {
     }
   }
 
-  async clientePorCpf(cpf: string): Promise<ClienteModel> {
+  async buscarClientePorCpf(cpf: string): Promise<ClienteModel> {
     if (!validaCpf(cpf)) throw new NotFoundException();
     cpf = this.removeMascara(cpf);
     const cliente = await this.repo.clienteModel.findUnique({ where: { cpf } });
